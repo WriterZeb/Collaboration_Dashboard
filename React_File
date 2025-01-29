@@ -1,0 +1,114 @@
+import React, { useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Brain, TrendingUp, AlertCircle, MessageSquare } from 'lucide-react';
+
+const AIDashboard = () => {
+  const [activeInsight, setActiveInsight] = useState(null);
+
+  const insights = [
+    {
+      id: 1,
+      type: 'Pattern',
+      title: 'Emerging Market Trend',
+      aiAnalysis: 'Rising demand in Southeast Asian markets',
+      strategicImplication: 'Consider expanding distribution networks',
+      confidence: 87
+    },
+    {
+      id: 2,
+      type: 'Risk',
+      title: 'Supply Chain Vulnerability',
+      aiAnalysis: 'Single supplier dependency for key components',
+      strategicImplication: 'Diversify supplier relationships',
+      confidence: 92
+    },
+    {
+      id: 3,
+      type: 'Opportunity',
+      title: 'Customer Feedback Pattern',
+      aiAnalysis: 'Consistent requests for mobile integration',
+      strategicImplication: 'Prioritize mobile app development',
+      confidence: 85
+    }
+  ];
+
+  const getIcon = (type) => {
+    switch(type) {
+      case 'Pattern': return <TrendingUp className="w-6 h-6 text-blue-500" />;
+      case 'Risk': return <AlertCircle className="w-6 h-6 text-red-500" />;
+      case 'Opportunity': return <Brain className="w-6 h-6 text-green-500" />;
+      default: return null;
+    }
+  };
+
+  return (
+    <div className="p-4 space-y-4">
+      <Card className="bg-white">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Brain className="w-6 h-6 text-purple-500" />
+            AI-Human Collaborative Intelligence
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* AI Insights Panel */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">AI Generated Insights</h3>
+              {insights.map(insight => (
+                <div
+                  key={insight.id}
+                  className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                    activeInsight?.id === insight.id 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-200 hover:border-blue-300'
+                  }`}
+                  onClick={() => setActiveInsight(insight)}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    {getIcon(insight.type)}
+                    <span className="font-medium">{insight.title}</span>
+                  </div>
+                  <p className="text-sm text-gray-600">{insight.aiAnalysis}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Strategic Analysis Panel */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">Strategic Analysis</h3>
+              {activeInsight ? (
+                <div className="space-y-4">
+                  <div className="bg-white p-4 rounded-lg">
+                    <h4 className="font-medium mb-2">AI Analysis</h4>
+                    <p className="text-gray-600">{activeInsight.aiAnalysis}</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg">
+                    <h4 className="font-medium mb-2">Strategic Implication</h4>
+                    <p className="text-gray-600">{activeInsight.strategicImplication}</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg">
+                    <h4 className="font-medium mb-2">Confidence Level</h4>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-blue-500 rounded-full h-2"
+                        style={{ width: `${activeInsight.confidence}%` }}
+                      />
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">{activeInsight.confidence}% confidence</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-48 text-gray-500">
+                  <p>Select an insight to view analysis</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default AIDashboard;
