@@ -1,0 +1,53 @@
+class InsightGenerator:
+    def __init__(self):
+        # Pre-defined patterns we're looking for
+        self.patterns = {
+            'market_growth': {
+                'keywords': ['increase', 'growth', 'rising', 'higher'],
+                'threshold': 0.6,
+                'template': 'Rising demand in {region} markets'
+            },
+            'supply_risk': {
+                'keywords': ['delay', 'shortage', 'single', 'dependent'],
+                'threshold': 0.7,
+                'template': 'Supply chain vulnerability detected in {component}'
+            }
+        }
+        
+    def analyze_data(self, data):
+        matches = {}
+        # Simple keyword matching
+        for pattern_name, pattern in self.patterns.items():
+            keyword_matches = sum(1 for keyword in pattern['keywords'] 
+                                if keyword in data.lower())
+            confidence = keyword_matches / len(pattern['keywords'])
+            
+            if confidence > pattern['threshold']:
+                matches[pattern_name] = {
+                    'confidence': confidence * 100,
+                    # Fill in template with detected values
+                    'insight': pattern['template'].format(
+                        region=self._detect_region(data),
+                        component=self._detect_component(data)
+                    )
+                }
+        return matches
+    
+    def _detect_region(self, text):
+        # Simplified region detection
+        regions = ['North America', 'Europe', 'Asia', 'Southeast Asia']
+        for region in regions:
+            if region.lower() in text.lower():
+                return region
+        return 'global'
+    
+    def _detect_component(self, text):
+        # Simplified component detection
+        return 'key components'  # In reality, would parse from text
+
+# Example usage
+analyzer = InsightGenerator()
+data = "Recent reports show increasing sales numbers in Southeast Asia, with particular growth in mobile devices."
+
+results = analyzer.analyze_data(data)
+print("Generated insights:", results)
